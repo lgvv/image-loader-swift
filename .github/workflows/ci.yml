@@ -76,6 +76,6 @@ jobs:
       - name: Run tests on iOS Simulator
         run: |
           xcodebuild test \
-            -scheme ImageCache \
+            -scheme ImageLoader-Package \
             -destination "id=${{ steps.sim.outputs.dest_id }}" \
             CODE_SIGNING_ALLOWED=NO

@@ -1,0 +1,17 @@
+disabled_rules:
+  - opening_brace
+included:
+  - Sources
+line_length:
+  warning: 180
+  error: 240
+trailing_comma:
+  mandatory_comma: true
+nesting:
+  type_level: 2
+type_name:
+  allowed_symbols: ["_"]
+identifier_name:
+  excluded:
+    - id
+    - io

@@ -3,55 +3,40 @@
 import PackageDescription
 
 let package = Package(
-    name: "ImageCache",
+    name: "ImageLoader",
     platforms: [
         .iOS(.v15)
     ],
     products: [
-        .library(name: "ImageCache", targets: ["ImageCache"]),
+        .library(name: "ImageLoader", targets: ["ImageLoader"]),
+        .library(name: "ImageLoaderUI", targets: ["ImageLoaderUI"]),
+        .library(name: "ImageLoaderTesting", targets: ["ImageLoaderTesting"]),
     ],
     targets: [
         .target(
-            name: "Common",
-            path: "Sources/Common"
+            name: "ImageLoader",
+            path: "Sources/ImageLoader"
         ),
         .target(
-            name: "Caches",
-            dependencies: ["Common"],
-            path: "Sources/Caches"
+            name: "ImageLoaderUI",
+            dependencies: ["ImageLoader"],
+            path: "Sources/ImageLoaderUI"
         ),
         .target(
-            name: "Networks",
-            path: "Sources/Networks"
-        ),
-        .target(
-            name: "ImageCache",
-            dependencies: ["Caches", "Networks", "Common"],
-            path: "Sources/ImageCache"
-        ),
-        .target(
-            name: "TestUtilities",
-            path: "Sources/TestUtilities"
+            name: "ImageLoaderTesting",
+            dependencies: ["ImageLoader"],
+            path: "Sources/ImageLoaderTesting"
         ),
         .testTarget(
-            name: "ImageCacheTests",
-            dependencies: ["ImageCache", "Common"],
-            path: "Tests/ImageCacheTests"
+            name: "ImageLoaderTests",
+            dependencies: ["ImageLoader", "ImageLoaderTesting"],
+            path: "Tests/ImageLoaderTests"
         ),
         .testTarget(
-            name: "CachesTests",
-            dependencies: ["Caches", "Common"],
-            path: "Tests/CachesTests"
+            name: "ImageLoaderUITests",
+            dependencies: ["ImageLoader", "ImageLoaderUI", "ImageLoaderTesting"],
+            path: "Tests/ImageLoaderUITests"
         ),
-        .testTarget(
-            name: "NetworksTests",
-            dependencies: ["Networks"],
-            path: "Tests/NetworksTests"
-        ),
-        .testTarget(
-            name: "CommonTests",
-            dependencies: ["Common"],
-            path: "Tests/CommonTests"
-        )
-    ]
+    ],
+    swiftLanguageModes: [.v6]
 )

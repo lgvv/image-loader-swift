@@ -1,0 +1,32 @@
+name: ImageLoaderExample
+options:
+  deploymentTarget:
+    iOS: "17.0"
+packages:
+  ImageLoader:
+    path: ..
+schemes:
+  ImageLoaderExample:
+    build:
+      targets:
+        ImageLoaderExample: all
+targets:
+  ImageLoaderExample:
+    type: application
+    platform: iOS
+    sources:
+      - ImageLoaderExample
+    dependencies:
+      - package: ImageLoader
+        product: ImageLoader
+      - package: ImageLoader
+        product: ImageLoaderUI
+    settings:
+      base:
+        SWIFT_VERSION: "6.0"
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_UILaunchScreen_Generation: YES
+        INFOPLIST_KEY_UISupportedInterfaceOrientations: UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight
+        PRODUCT_BUNDLE_IDENTIFIER: imageloader.example
+        CODE_SIGN_STYLE: Automatic
+        TARGETED_DEVICE_FAMILY: "1,2"
