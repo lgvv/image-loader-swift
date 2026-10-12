@@ -222,7 +222,7 @@ private final class ResumingLoader: DataLoading, @unchecked Sendable {
         requests.append(request)
         let step = steps.removeFirst()
         lock.unlock()
-        DispatchQueue.global().async {
+        DispatchQueue(label: "ImageLoaderTests.PublicSurfaceCoverageTests").async {
             let response = HTTPURLResponse(url: request.url!, statusCode: step.status, httpVersion: "HTTP/1.1", headerFields: step.headers)!
             if !step.body.isEmpty {
                 didReceiveData(step.body, response)

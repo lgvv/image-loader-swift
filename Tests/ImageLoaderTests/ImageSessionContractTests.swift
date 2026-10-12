@@ -348,7 +348,7 @@ struct CallbackAdapterTests {
         }
         let probes = Box<[PublisherRaceProbe]>([])
         await withCheckedContinuation { (continuation: CheckedContinuation<Void, Never>) in
-            DispatchQueue.global().async {
+            DispatchQueue(label: "ImageLoaderTests.ImageSessionContractTests").async {
                 for index in 0..<10_000 {
                     let probe = PublisherRaceProbe()
                     session.imagePublisher(with: Fixtures.url(index)).subscribe(probe)

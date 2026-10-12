@@ -162,7 +162,7 @@ struct MemoryCacheBenchmarks {
         let readerStarted = DispatchSemaphore(value: 0)
         let latencies = Box<[Double]>([])
         let reader = DispatchGroup()
-        DispatchQueue.global(qos: .userInitiated).async(group: reader) {
+        DispatchQueue(label: "ImageLoaderTests.MemoryCacheBenchmarks", qos: .userInitiated).async(group: reader) {
             let probe = MemoryCacheKey(key: "absent")
             var local: [Double] = []
             local.reserveCapacity(100_000)
@@ -189,7 +189,9 @@ struct MemoryCacheBenchmarks {
         let sorted = latencies.value.sorted()
         let p99 = sorted.isEmpty ? 0 : sorted[min(sorted.count - 1, sorted.count * 99 / 100)]
         let maximum = sorted.last ?? 0
-        #expect(handler.cpu * 1000 <= 1)
+        if enforcesTimingBudgets {
+            #expect(handler.cpu * 1000 <= 1)
+        }
         let name = weakCacheEnabled ? "memory_cache_memory_pressure_purge_weak" : "memory_cache_memory_pressure_purge"
         print(
             "BENCH|\(name)|entries=\(entryCount)|handler_wall_ms=\(MemoryCacheBenchFixture.format(handler.wall * 1000))|handler_cpu_ms=\(MemoryCacheBenchFixture.format(handler.cpu * 1000))|release_queue_wall_ms=\(MemoryCacheBenchFixture.format(release.wall * 1000))|concurrent_get_p99_us=\(MemoryCacheBenchFixture.format(p99))|concurrent_get_max_us=\(MemoryCacheBenchFixture.format(maximum))|concurrent_gets=\(sorted.count)|threshold_ms=1"

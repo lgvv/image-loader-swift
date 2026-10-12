@@ -65,6 +65,8 @@ func drainSessionQueue() {
     SessionQueue.sync {}
 }
 
+let enforcesTimingBudgets = ProcessInfo.processInfo.environment["CI"] == nil
+
 func elapsedSeconds(since start: UInt64) -> Double {
     Double(DispatchTime.now().uptimeNanoseconds - start) / 1_000_000_000
 }

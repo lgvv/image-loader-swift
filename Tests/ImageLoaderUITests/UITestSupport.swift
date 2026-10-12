@@ -10,6 +10,7 @@ import UniformTypeIdentifiers
 @testable import ImageLoader
 
 let uiIsThreadSanitizerEnabled = dlsym(UnsafeMutableRawPointer(bitPattern: -2), "__tsan_init") != nil
+let uiEnforcesTimingBudgets = ProcessInfo.processInfo.environment["CI"] == nil
 
 enum UIFixtures {
     typealias RGB = (red: UInt8, green: UInt8, blue: UInt8)

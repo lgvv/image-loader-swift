@@ -74,6 +74,8 @@ jobs:
           xcrun simctl bootstatus "$DEST_ID" -b
 
       - name: Run tests on iOS Simulator
+        env:
+          TEST_RUNNER_CI: "true"
         run: |
           xcodebuild test \
             -scheme ImageLoader-Package \

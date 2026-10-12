@@ -1163,7 +1163,7 @@ private func recordSizeLimitAtRegistration(of path: URL) throws -> (observed: Bo
         )
         cache.sizeLimit = 1000
         let counted = DispatchSemaphore(value: 0)
-        DispatchQueue.global().async {
+        DispatchQueue(label: "ImageLoaderTests.DiskCacheTests").async {
             _ = cache.totalCount
             counted.signal()
         }
@@ -1171,7 +1171,7 @@ private func recordSizeLimitAtRegistration(of path: URL) throws -> (observed: Bo
 
         let observed = Box<(read: Bool, contains: Bool)?>(nil)
         let finished = DispatchSemaphore(value: 0)
-        DispatchQueue.global().async {
+        DispatchQueue(label: "ImageLoaderTests.DiskCacheTests").async {
             let read = cache.cachedData(for: "a") != nil
             cache.storeData(Data(repeating: 2, count: 300), for: "d")
             observed.value = (read, cache.containsData(for: "d"))

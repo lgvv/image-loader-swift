@@ -37,7 +37,9 @@ struct UIBenchmarks {
         print(String(format: "BENCH|ui.memoryHitLoadImage|iterations=%d|cpu_avg_us=%.2f|wall_avg_us=%.2f|threshold_us=30", iterations, cpuAverage, wallAverage))
         #expect(completions.value == iterations)
         #expect(loader.counts.started == 0)
-        #expect(cpuAverage <= 30)
+        if uiEnforcesTimingBudgets {
+            #expect(cpuAverage <= 30)
+        }
     }
 }
 

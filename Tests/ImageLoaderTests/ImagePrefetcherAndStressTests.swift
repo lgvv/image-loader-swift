@@ -266,7 +266,7 @@ private func runStreamRace(session: ImageSession, streams: StreamCapturingDelega
     var outcome = StreamRaceOutcome()
     if cancelAfterProgress == 0 {
         outcome.didCallCancel = true
-        DispatchQueue.global().async { task.cancel() }
+        DispatchQueue(label: "ImageLoaderTests.ImagePrefetcherAndStressTests").async { task.cancel() }
     }
     for await event in stream {
         if outcome.finishedCount > 0 {
@@ -279,7 +279,7 @@ private func runStreamRace(session: ImageSession, streams: StreamCapturingDelega
             outcome.progressCount += 1
             if outcome.progressCount == cancelAfterProgress {
                 outcome.didCallCancel = true
-                DispatchQueue.global().async { task.cancel() }
+                DispatchQueue(label: "ImageLoaderTests.ImagePrefetcherAndStressTests").async { task.cancel() }
             }
         case .finished(let result):
             outcome.finishedCount += 1

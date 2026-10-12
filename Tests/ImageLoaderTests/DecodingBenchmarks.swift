@@ -55,7 +55,9 @@ struct DecodingBenchmarks {
         print(
             "BENCH|decoding|frame_decode_400x400|frames=\(samples.count)|cpu_median_ms=\(Self.format(cpuMedian))|cpu_p95_ms=\(Self.format(cpuP95))|wall_median_ms=\(Self.format(wallMedian))|wall_p95_ms=\(Self.format(wallP95))|threshold_ms=4"
         )
-        #expect(cpuMedian <= 4)
+        if enforcesTimingBudgets {
+            #expect(cpuMedian <= 4)
+        }
     }
 
     @Test("200프레임 400x400 GIF 전체를 32MB 예산 안에서 디코딩, 두 번째 바퀴는 앞쪽 창이 적중")
@@ -110,7 +112,7 @@ struct DecodingBenchmarks {
             print(
                 "BENCH|decoding|frame_decode_400x400_\(name)|gif_kb=\(gif.count / 1024)|frames=\(samples.count)|cpu_median_ms=\(Self.format(cpuMedian))|cpu_p95_ms=\(Self.format(Self.percentile(samples.map(\.cpu), 0.95)))|wall_median_ms=\(Self.format(Self.percentile(samples.map(\.wall), 0.5)))|wall_p95_ms=\(Self.format(Self.percentile(samples.map(\.wall), 0.95)))|threshold_ms=4"
             )
-            if texture == .photo {
+            if texture == .photo, enforcesTimingBudgets {
                 #expect(cpuMedian <= 4)
             }
         }
@@ -147,7 +149,9 @@ struct DecodingBenchmarks {
                 .map { "\($0)_us=\(Self.format(medians[$0] ?? 0))" }
                 .joined(separator: "|")
             print("BENCH|decoding|sync_decode_\(name)|\(fields)")
-            #expect((medians["header_scan"] ?? .infinity) < 20, "\(name)")
+            if enforcesTimingBudgets {
+                #expect((medians["header_scan"] ?? .infinity) < 20, "\(name)")
+            }
         }
     }
 

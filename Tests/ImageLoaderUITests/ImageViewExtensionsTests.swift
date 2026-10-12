@@ -161,7 +161,7 @@ struct ImageViewContractTests {
         #expect(weakController != nil)
 
         let releasedOffMain = await withCheckedContinuation { (continuation: CheckedContinuation<Bool, Never>) in
-            DispatchQueue.global(qos: .userInitiated).async {
+            DispatchQueue(label: "ImageLoaderUITests.ImageViewExtensionsTests", qos: .userInitiated).async {
                 handoff.controller = nil
                 continuation.resume(returning: !Thread.isMainThread)
             }

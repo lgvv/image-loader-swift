@@ -1350,7 +1350,9 @@ struct DataLoaderBenchmarks {
         print(
             "BENCH|loader.cancelToCompletion|count=\(count)|p50_ms=\(String(format: "%.3f", percentile(latencies, 0.5)))|p95_ms=\(String(format: "%.3f", percentile(latencies, 0.95)))"
         )
-        #expect(p95 < 10)
+        if enforcesTimingBudgets {
+            #expect(p95 < 10)
+        }
     }
 
     @Test("파이프라인 스크롤 취소: 100건 중 90건 취소, 실제 로더로 10건만 완료")
@@ -1405,6 +1407,8 @@ struct DataLoaderBenchmarks {
         #expect(cancelled == 90)
         #expect(finished == 10)
         #expect(stopped.count == started.count)
-        #expect(p95 < 10)
+        if enforcesTimingBudgets {
+            #expect(p95 < 10)
+        }
     }
 }

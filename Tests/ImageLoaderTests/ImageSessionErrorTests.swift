@@ -152,7 +152,7 @@ struct ImageSessionErrorBoundaryTests {
             completion: @escaping @Sendable (Error?) -> Void
         ) -> any Cancellable {
             let error = error
-            DispatchQueue.global().async { completion(error) }
+            DispatchQueue(label: "ImageLoaderTests.ImageSessionErrorTests").async { completion(error) }
             return NoopCancellable()
         }
     }

@@ -233,7 +233,7 @@ struct AnimatedImageTests {
         let first = Box<CGImage?>(nil)
         let second = Box<CGImage?>(nil)
         let finished = Box(0)
-        DispatchQueue.global(qos: .userInitiated).async {
+        DispatchQueue(label: "ImageLoaderTests.AnimatedImageTests", qos: .userInitiated).async {
             first.value = source.decodeFrame(at: 1)
             finished.mutate { $0 += 1 }
         }
@@ -250,7 +250,7 @@ struct AnimatedImageTests {
         #expect(unrelated.decodeFrame(at: 2) != nil)
         #expect(cache.count == 2)
 
-        DispatchQueue.global(qos: .userInitiated).async {
+        DispatchQueue(label: "ImageLoaderTests.AnimatedImageTests", qos: .userInitiated).async {
             second.value = source.decodeFrame(at: 1)
             finished.mutate { $0 += 1 }
         }
@@ -470,7 +470,7 @@ struct AnimatedImageTests {
         let released = Box(false)
         let other = Box<AnimatedImageSource?>(try makeSource(DecodingFixtures.gif(frameCount: 8), cache: cache))
         other.value?.prefetchFrames(Array(1..<8))
-        DispatchQueue.global(qos: .userInitiated).async {
+        DispatchQueue(label: "ImageLoaderTests.AnimatedImageTests", qos: .userInitiated).async {
             other.value = nil
             released.value = true
         }
@@ -535,7 +535,7 @@ struct AnimatedImageTests {
         let stoppedWorkers = Box(0)
         let workerCount = 3
         for worker in 0..<workerCount {
-            DispatchQueue.global(qos: .default).async {
+            DispatchQueue(label: "ImageLoaderTests.AnimatedImageTests", qos: .default).async {
                 for round in 0..<4_000 {
                     let key = AnimatedFrameKey(sourceID: UInt64.max - UInt64(worker), index: round % 32)
                     cache.insert(filler, for: key)
@@ -564,16 +564,16 @@ struct AnimatedImageTests {
             switch round % 4 {
             case 0:
                 let box = Box<AnimatedImageSource?>(source)
-                DispatchQueue.global(qos: .userInitiated).async {
+                DispatchQueue(label: "ImageLoaderTests.AnimatedImageTests", qos: .userInitiated).async {
                     box.value = nil
                 }
             case 1:
-                DispatchQueue.global(qos: .userInitiated).async { [source] in
+                DispatchQueue(label: "ImageLoaderTests.AnimatedImageTests", qos: .userInitiated).async { [source] in
                     _ = source.frameCount
                 }
             case 2:
                 let holder = LockIsolated<AnimatedImageSource?>(source)
-                DispatchQueue.global(qos: .userInitiated).async {
+                DispatchQueue(label: "ImageLoaderTests.AnimatedImageTests", qos: .userInitiated).async {
                     holder.withLock { $0 = nil }
                 }
             default:
@@ -617,7 +617,7 @@ struct AnimatedImageTests {
         let crossOuter = LockIsolated(0)
         let crossInner = LockIsolated(0)
         let crossThreadDone = Box(false)
-        DispatchQueue.global(qos: .userInitiated).async {
+        DispatchQueue(label: "ImageLoaderTests.AnimatedImageTests", qos: .userInitiated).async {
             crossOuter.withLock { _ in
                 crossInner.withLock { _ in }
             }
@@ -679,7 +679,7 @@ struct AnimatedImageTests {
         let shared = Box<CGImage?>(nil)
         let other = Box<CGImage?>(nil)
         let finished = Box(0)
-        DispatchQueue.global(qos: .userInitiated).async {
+        DispatchQueue(label: "ImageLoaderTests.AnimatedImageTests", qos: .userInitiated).async {
             first.value = source.decodeFrame(at: 1)
             finished.mutate { $0 += 1 }
         }
