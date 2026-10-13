@@ -12,7 +12,7 @@ jobs:
     runs-on: macos-latest
     strategy:
       matrix:
-        xcode: ['26.1']
+        xcode: ['latest-stable']
     steps:
       - uses: actions/checkout@v4
 
@@ -30,12 +30,15 @@ jobs:
       - name: Find iOS Simulator
         id: sim
         run: |
+          SDK_VERSION=$(xcrun --sdk iphonesimulator --show-sdk-version)
+          echo "iOS Simulator SDK: $SDK_VERSION"
           DEST_ID=$(xcrun simctl list devices available -j \
             | python3 -c "
           import json, sys
 
           data = json.load(sys.stdin)
-          preferred_names = ['iPhone 16 Pro', 'iPhone 16', 'iPhone 15 Pro', 'iPhone 15']
+          sdk_version = tuple(int(bit) for bit in sys.argv[1].split('.'))
+          preferred_names = ['iPhone 17', 'iPhone 17 Pro', 'iPhone 16', 'iPhone 16 Pro']
           choices = []
 
           for runtime, devices in data['devices'].items():
@@ -46,6 +49,8 @@ jobs:
               try:
                   version = tuple(int(bit) for bit in version_bits)
               except ValueError:
+                  continue
+              if version[:2] > sdk_version[:2]:
                   continue
 
               for device in devices:
@@ -68,7 +73,7 @@ jobs:
 
           choices.sort()
           print(choices[0][3])
-          ")
+          " "$SDK_VERSION")
           echo "dest_id=$DEST_ID" >> "$GITHUB_OUTPUT"
           xcrun simctl boot "$DEST_ID" || true
           xcrun simctl bootstatus "$DEST_ID" -b
